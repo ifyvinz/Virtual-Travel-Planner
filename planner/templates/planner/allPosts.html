@@ -1,0 +1,52 @@
+{% extends "planner/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+
+   <div class="container">
+    <div class="row">
+      {% for post in posts %}
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            {% if post.photo %}
+                  <img src="{{ post.photo.url }}" class="card-img-top" alt="{{ post.title }}" width="200" height="200">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ post.title }}</h5>
+              <p>{{ post.body|slice:":100" }}{% if post.body|length > 100 %}...{% endif %}</p>
+
+              <a href="{% url 'readBlog' post.id%}" class="btn text-light bg-dark">Read More</a>
+             
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    
+    <div class="pagination mt-4 justify-content-center ">
+      <span class="step-links d-flex page-item">
+          {% if posts.has_previous %}
+              <a class="page-link" href="?page=1">&laquo; first</a>
+              <a class="page-link" href="?page={{ posts.previous_page_number }}">previous</a>
+          {% endif %}
+          
+          <span class="d-inline-flex p-2">
+              Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+          </span>
+          
+          {% if posts.has_next %}
+              <a class="page-link" href="?page={{ posts.next_page_number }}">next</a>
+              <a class="page-link" href="?page={{ posts.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+      </span>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+
+
+
+   
+{% endblock %}

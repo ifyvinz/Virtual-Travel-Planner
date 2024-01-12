@@ -1,0 +1,136 @@
+{% extends "planner/layout.html" %}
+{% load static %}
+
+{% load humanize %}
+
+{% block body %}
+  <div  class="container mt-3">
+    <div class="card" id="blog-div">
+      <div class="card-body">
+        {% if post.photo %}
+           
+           <a href="{% url 'aframe' post.id %}"><img src="{{ post.photo.url }}" class="card-img-top img-fluid" alt="Blog Photo"></a>
+        {% endif %}
+        <p class="card-text">Posted by: <a href="{% url 'userProfile' post.author.username  %}" class="card-link">{{ post.author.username }} </a>{{ post.timestamp }}</p>
+        <h2 class="card-title">{{ post.title }}</h2>
+        {% if post.location %}
+          <p class="card-text">Location: {{ post.location }}</p>
+        {% endif %}
+        <p class="card-text">{{ post.body }}</p>
+        
+        
+        
+        <!-- Display tags if available -->
+        {% if tags.all %}
+          <p class="card-text">Tags: {% for tag in tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+        {% endif %}
+
+        <!-- Display like button -->
+        <div id="post-likes">
+            {% if user.is_authenticated %}
+               <div class="blog-icons d-flex justify-content-between">
+                 {% if user in post.likes.all %}
+                    <div class="like-blog">
+                       <span id="like-icon" class="material-icons like-icon-span align-middle" data-id="{{post.id}}">
+                         favorite 
+                       </span>
+                       <span id="like-span" class="added-likes like-count-span align-middle" data-id="{{post.id}}">{{post.likes.count}}</span>
+                    </div>
+                 {% else %}
+                    <div class="none-like-blog">
+                      <span  id="none-like-icon" class="material-icons unlike-icon-span align-middle" data-id="{{post.id}}"> favorite_border </span>
+                      <span id="none-like-span" class="unlike like-count-span align-middle">{{post.likes.count}}</span>
+                    </div>
+                    <!--<span class="like-span"><i class="far fa-heart like-italic" data-id="{{post.id}}"></i><span class="unlike">{{post.likes.count}}</span></span>end of post likes span-->
+                 {% endif %}
+                 <div class="comment-icon"><a href="{% url 'comments' post.id %}"><span class="material-symbols-outlined">
+                    comment
+                    </span>{{post.comment.count}}</a>
+                 </div>
+                 {% if user == post.author %}
+                   <div class="edit-icon">
+                      <span class="material-symbols-outlined">edit_note </span>
+                   </div><!--end of edit-icon div-->
+                   <div class="delete-icon">
+                      <form method="post" action="{% url 'deleteBlog' post.id %}">
+                         {% csrf_token %}
+                         <button class="delete-button" ><span type="submit" class="material-symbols-outlined">
+                            delete
+                           </span>
+                         </button>
+                      </form>
+                     
+                   </div>
+                 {% endif %}
+               </div>
+               
+            {% else %}
+              
+              <span class="like-span">
+                 <i class="far fa-heart like-italic" data-id="{{post.id}}"></i>
+                 <span class="unlike">{{post.likes.count}}</span>
+              </span><!-- end of post likes span-->
+              
+           {% endif %}
+            
+            
+        </div><!-- end of post likes and edit button div-->
+        
+        
+      </div><!--Card-body ends-->
+    </div><!--Card ends-->
+   
+
+   <!-- Display similar posts -->
+   <div id="similar-blog-div" class="container mt-3">
+    <h3>Similar Posts</h3>
+    <div class="row">
+      {% for similar_post in similar_posts %}
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            {% if similar_post.photo %}
+              <img src="{{ similar_post.photo.url }}" class="card-img-top" alt="Similar Post Photo" width="200" height="200">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ similar_post.title }}</h5>
+              <p class="card-text">{{ similar_post.body|truncatechars:100 }}</p>
+              <a href="{% url 'readBlog' blog_id=similar_post.id %}" class="btn btn-dark text-light">Read More</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Edit form -->
+  <div class="container mt-4" >
+     <div class="form-div edit-form">
+         <form action="{% url 'editBlog' post.id %}" method="post" class="form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+               {{form}}
+            </div>
+            <button type="submit" class="btn btn-dark" id = "submit-trip">Save</button>
+         </form>
+     </div>
+ </div>
+{% endblock %}
+
+{% block script %}
+
+<script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+
+<script type="module" src="{% static 'planner/blog.js' %}"></script>
+
+
+
+
+<script>
+    function initAutocomplete() {
+     const input = document.getElementById('post-location');
+     const autocomplete = new google.maps.places.Autocomplete(input);
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initAutocomplete&libraries=places&v=weekly"defer></script>
+   
+{% endblock %}

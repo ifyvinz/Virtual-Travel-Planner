@@ -1,0 +1,62 @@
+{% extends "planner/layout.html" %}
+
+{% load static %}
+
+{% block body %}
+  <div class="container mt-4">
+    <div class="card">
+      <div class="card-body">
+        <form id="post-form" action="{% url 'comments' post.id %}" method="post" class="form-container">
+          {% csrf_token %}
+          <div class="form-group">
+            <textarea id="post-area" class="form-control" name="content" rows="4" cols="40" placeholder="Leave your comment..."></textarea>
+            <input type="hidden" name="hidden" value="{{comment.id }}">
+            <button id="post-btn" class="btn btn-dark">Comment</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {% for comment in comments %}
+      <div class="card mt-3">
+        <div class="card-body">
+          <div class="card-title"><h5>{{comment.user.username}}</h5></div>
+          <p class="card-text">{{comment.content}}</p>
+          <small>{{ comment.timestamp }}</small>
+          <button class="btn btn-link" data-toggle="collapse" data-target="#replyForm{{ comment.id }}" aria-expanded="true" aria-controls="replyForm{{ comment.id }}">
+            Reply
+          </button>
+        </div>
+      </div>
+
+      <div id="replyForm{{ comment.id }}" class="form-container collapse mt-3">
+        <form id="reply-comment-form-{{ comment.id }}"  action="{% url 'comments' post.id %}" method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <textarea content-input class="form-control" name="content" rows="4" cols="40" placeholder="Reply..."></textarea>
+            <input type="hidden" name="hidden" value="{{comment.id }}">
+            <button id="post-btn" class="btn btn-dark">Reply Comment</button>
+          </div>
+        </form>
+      </div>
+
+      {% if comment.replies.count > 0 %}
+        <div class="ml-3">
+          {% for reply in comment.replies.all %}
+            <div class="card mt-2">
+              <div class="card-body">
+                <div class="card-title"><h5>{{ reply.user.username}}</h5></div>
+                <p class="card-text">{{ reply.content}}</p>
+                <small>{{  reply.timestamp }}</small>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endblock %}
+
+{% block script %}
+ 
+{% endblock %}
