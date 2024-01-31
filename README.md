@@ -3,11 +3,10 @@
 
 ---
 
-[**Watch the full Youtube vidoe demomostration of this project**](https://youtu.be/d33pjNPezWQ).
+[**Watch the full Youtube vidoe demomostration of this project**](https://youtu.be/0fkz_RKFdwY).
 
 ---
 
-The inspiration behind the creation of this web app was my girlfriend. She loves travels and trip planning. So i created this web app so users can create a virtual trip, have sight seeings sugessted to them and  write a blog post about their expirence and share it with other users who might interested in visiting.
 
 #### The main features:
 
