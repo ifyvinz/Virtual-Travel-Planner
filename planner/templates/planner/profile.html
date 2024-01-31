@@ -45,14 +45,15 @@
             <div class="card-header">
                 {% if profile.username == user.username %}
                 <ul class="nav nav-tabs card-header-tabs profile-control justify-content-center list-unstyled">
-                    <li class="nav-item" id="edit-button">
-                        <a class="nav-link active" href="#">Edit</a>
-                    </li>
+                   
                     <li class="nav-item" id="blogs-button">
-                        <a class="nav-link" href="#">Blog</a>
+                        <a class="nav-link active" href="#">Blog</a>
                     </li>
                     <li class="nav-item" id="trips-button">
                         <a class="nav-link" href="#">Trips</a>
+                    </li>
+                    <li class="nav-item" id="edit-button">
+                        <a class="nav-link" href="#">Edit</a>
                     </li>
                 </ul>
                 {% endif %}

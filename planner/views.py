@@ -93,19 +93,12 @@ def pagination(request, posts, postNumber, page_param='page'):
 def get_google_places_data(api_key, city_name):
     url = 'https://maps.googleapis.com/maps/api/place/textsearch/json'
     params = {
-        'query': f'must see things {city_name}',
+        'query': f'must see places and things to do in {city_name}',
         'key': api_key,
     }
     response = requests.get(url, params=params)
     data = response.json()
     return data.get('results', [])
-""""
-def home(request):
-    google_api_key = 'YOUR_GOOGLE_API_KEY'
-    city_name = 'YourDestinationCity'
-    places = get_google_places_data(google_api_key, city_name)
-    return render(request, 'home.html', {'places': places})
-"""
 
 def googlePlace(request, city_name):
      # Retrieve Google API key from Django settings
