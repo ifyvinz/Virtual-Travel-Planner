@@ -1,0 +1,17 @@
+{% extends "planner/layout.html" %}
+{% load static %}
+
+{% load humanize %}
+
+{% block body %}
+
+<a-scene class="aframebox" embedded>
+    <a-sky src="{{ post.photo.url }}" rotation="0 -130 0" color="#ECECEC"></a-sky>
+ 
+</a-scene>
+{% endblock %}
+
+{% block script %}
+
+<script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+{% endblock %}

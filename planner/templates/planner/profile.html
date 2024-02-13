@@ -1,0 +1,164 @@
+{% extends "planner/layout.html" %}
+{% load static %}
+
+{% block body %}
+<div class="container mt-3">
+    <div id="profile-content">
+        <!-- User Information Card -->
+        <div class="card">
+            <div class="row justify-content-center align-items-center p-3">
+                <div class=" personal">
+                    <div class="photo">
+                        {% if profile.photo %}
+                        <div id="profile-image-div">
+                            <img src="{{profile.photo.url}}" alt="profile image" id="profile-image" class="img-fluid" width="300" height="300">
+                        </div>
+                        {% else %}
+                        <div class="avatar">
+                            <i class="fas fa-user-tie fa-9x"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="user-info mt-3 align-items-center ml-4">
+                        <h3 id="user-name" class="mb-0">{{ profile.get_full_name|default:'' }}</h3>
+                        <p id="user-email" class="mb-1">
+                            {% if profile.email %}
+                            {{ profile.email }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div >
+                    <div class="card-body">
+                        <p id="user-about" class="card-text">
+                            {% if profile.about %}
+                            {{ profile.about }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- User Information Card Ends -->
+
+        <!-- Profile Control Tabs -->
+        <div class="card text-center mt-3">
+            <div class="card-header">
+                {% if profile.username == user.username %}
+                <ul class="nav nav-tabs card-header-tabs profile-control justify-content-center list-unstyled">
+                   
+                    <li class="nav-item" id="blogs-button">
+                        <a class="nav-link active" href="#">Blog</a>
+                    </li>
+                    <li class="nav-item" id="trips-button">
+                        <a class="nav-link" href="#">Trips</a>
+                    </li>
+                    <li class="nav-item" id="edit-button">
+                        <a class="nav-link" href="#">Edit</a>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <!-- User Blogs Section -->
+                <div id="user-blogs" class="mt-5">
+                    <div class="row">
+                        {% for post in posts %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                {% if post.photo %}
+                                <img src="{{ post.photo.url }}" class="card-img-top" alt="{{ post.title }}" width="200" height="200">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ post.title }}</h5>
+                                    <p>{{ post.body|slice:":100" }}{% if post.body|length > 100 %}...{% endif %}</p>
+                                    <a href="{% url 'readBlog' post.id%}" class="btn text-light bg-dark">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div><!-- End of User Blogs Section -->
+
+                    {% if posts.has_next %}
+                    <div class="pagination mt-4 justify-content-center ">
+                        <span class="step-links d-flex page-item">
+                            {% if posts.has_previous %}
+                            <a class="page-link" href="?blog_page=1">&laquo; first</a>
+                            <a class="page-link" href="?blog_page={{ posts.previous_page_number }}">previous</a>
+                            {% endif %}
+                            <span class="d-inline-flex p-2">
+                                Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+                            </span>
+                            {% if posts.has_next %}
+                            <a class="page-link" href="?blog_page={{ posts.next_page_number }}">next</a>
+                            <a class="page-link" href="?blog_page={{ posts.paginator.num_pages }}">last &raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div><!-- End of Pagination for User Blogs Section -->
+                    {% endif %}
+                </div><!-- End of User Blogs Section -->
+
+                <!-- User Trips Section -->
+                <div id="user-trips" class="trips mt-5">
+                    <h2>Your Trips</h2>
+                    <div class="row">
+                        {% for trip in trips %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-body {% if trip.is_past_due %}bg-dark text-light{% endif %}">
+                                    <h5 class="card-title">{{ trip.destination }}</h5>
+                                    <p class="card-text">Purpose: {{ trip.purpose }}</p>
+                                    <p class="card-text">
+                                        Departure: {{ trip.departure|date:"F d, Y" }} <br>
+                                        Return: {{ trip.arrival|date:"F d, Y" }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div><!-- End of User Trips Section -->
+
+                    <!-- User Trip Pagination -->
+                    <!-- <div class="pagination mt-4 justify-content-center ">
+                        <span class="step-links d-flex page-item">
+                            {% if trips.has_previous %}
+                            <a class="page-link" href="?trip_page=1">&laquo; first</a>
+                            <a class="page-link" href="?trip_page={{ trips.previous_page_number }}">previous</a>
+                            {% endif %}
+                            <span class="d-inline-flex p-2">
+                                Page {{ trips.number }} of {{ trips.paginator.num_pages }}.
+                            </span>
+                            {% if trips.has_next %}
+                            <a id="next-trip" class="page-link next-link" href="?trip_page={{ trips.next_page_number }}">next</a>
+                            <a class="page-link" href="?trip_page={{ trips.paginator.num_pages }}">last &raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div> -->
+                    <!-- End of User Trip Pagination -->
+                </div><!-- End of User Trips Section -->
+
+            </div>
+        </div><!-- End of Profile Control Tabs -->
+
+        <!-- Edit Profile Form -->
+        
+    </div>
+    <div class="container" id="edit-form">
+      <div class="profile-form mt-3">
+          <h2 class="text-center">Edit Profile</h2>
+          <form method="post" id="edit-profile-form" class="form" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="form-group">
+                  {{ form.as_p }}
+                  <input type="hidden" id="hidden" name="hidden" value="{{user.username}}">
+              </div>
+              <button type="submit" id="profile-submit" class="btn btn-dark" data-id="{{profile.id}}">Save Changes</button>
+          </form>
+      </div>
+  </div><!-- End of Edit Profile Form -->
+</div>
+
+{% endblock body %}
+
+{% block script %}
+<script type="module" src="{% static 'planner/profile.js' %}"></script>
+{% endblock %}

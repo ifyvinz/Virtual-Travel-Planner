@@ -1,0 +1,100 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}Social Network{% endblock %}</title>
+    <script src="https://kit.fontawesome.com/b3593cc404.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+   
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- swiper js-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <link href="{% static 'planner/styles.css' %}" rel="stylesheet">
+
+    <!-- google icons-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-fm5Uy4wQF/1/WC0CgugC5Y0Xac2jx/J9m4GRJ2bywqI3IA/IHP4X+uAlEGp7hxIm+PjbGqcz1j3oyw/A6Q+4Zg==" crossorigin="anonymous" />-->
+
+
+    <!--boostrap javasript library-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+    <script src="{% url 'js-catlog' %}"></script><!-- admin date picker starts here-->
+    <script src="{% static '/admin/js/core.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'admin/css/widgets.css' %}"><!-- admin date picker ends here-->
+    {% block script %}
+    {% endblock %}
+</head>
+<body>
+    <div class ="container"></div><!-- end of container-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="nav-barr">
+        <a class="navbar-brand" href="{% url 'index' %}">Travel planner</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto list-unstyled">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'userProfile' user.username %}">
+                            {% if user.photo %}
+                                <img src={{user.photo.url}} alt="profile picture"  class="round main-user-photo">
+                            {% else %}
+                                <i class="fas fa-user-tie fa-2x"></i>
+                            {% endif %} 
+                            <strong > {{ user.username }}</strong></a>
+                    </li>
+                {% endif %}
+                
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'createPost' %}">Create Post</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'blogs' %}">Explore</a>
+                    </li>
+                    <li class="nav-item">
+                        <!--<a class="nav-link" href="#">Following</a> -->
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <form class="form-inline my-2 my-lg-0" method="post" action="{% url 'search' %}">
+                {% csrf_token %}
+                 <input id="city" class="form-control mr-sm-2" type="search" name="city" placeholder="Search cities" aria-label="Search">
+                 <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</button>
+              </form>
+        </div>
+    </nav>
+    
+    <div class="body container">
+        {% block body %}
+        {% endblock %}
+    </div>
+</body>
+<!--<script>
+   function initAutocomplete() {
+     const input = document.getElementById('city');
+     const autocomplete = new google.maps.places.Autocomplete(input);
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initAutocomplete&libraries=places&v=weekly"defer></script>-->
+
+</html>
