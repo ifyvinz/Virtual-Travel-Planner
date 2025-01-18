@@ -3,25 +3,16 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      docker: 20
-    commands:
-      - echo "Installing required dependencies"
+      python: 3.8
   pre_build:
     commands:
-      - echo "Logging in to Amazon ECR..."
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
   build:
     commands:
-      - echo "Build started on `date`"
-      - echo "Building the Docker image..."
-      - docker build -t virtual-travel-planner-app .
-      - docker tag virtual-travel-planner-app:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/virtual-travel-planner-app:latest
+      - echo Build phase starting...
+      - docker build -t virtual-travel-planner .
+      - docker tag virtual-travel-planner:latest $REPOSITORY_URI:latest
   post_build:
     commands:
-      - echo "Build completed on `date`"
-      - echo "Pushing the Docker image to ECR..."
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/virtual-travel-planner-app:latest
-
-artifacts:
-  files:
-    - '**/*'
+      - echo Build completed successfully.
