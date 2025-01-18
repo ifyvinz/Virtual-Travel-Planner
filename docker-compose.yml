@@ -1,0 +1,42 @@
+#version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+    image: virtual-travel-planner-app:latest
+    container_name: django_app
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=0
+      - SECRET_KEY=${SECRET_KEY}
+      - GOOGLE_PLATROM_API=${GOOGLE_PLATROM_API}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPEN_WEATHER_API_KEY=${OPEN_WEATHER_API_KEY}
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+    #depends_on:
+      #- nginx
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - media_volume:/media
+      - static_volume:/static
+    depends_on:
+      - web
+
+volumes:
+  static_volume:
+  media_volume:
