@@ -1,0 +1,250 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins",sans-serif;
+}
+
+.google-body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #34495e;
+    /*background-color: rgb(61, 53, 126);*/
+}
+
+.google-container{
+    max-width: 1440px;
+    margin: 0 auto;
+    background: #5d6d7e;
+    color: #fff;
+    padding-bottom: 4rem;
+}
+
+.google-container img{
+    display: block;
+    width: 80%;
+    object-fit: fill;
+    border-radius: 10px 10px 0 0;
+}
+
+.google-container .card-content{
+    display: flex;
+    padding: 6rem 2.5rem;
+}
+
+.cards{
+    width: 100%;
+    position: relative;
+}
+
+.cards .title{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: rgb(255,255,255,0.7);
+    width: 80%;
+    text-align: center;
+    padding: 0.4rem;
+}
+
+.content{
+    background: #fff;
+    text-align: center;
+    position: absolute;
+    padding: 1rem 0;
+    width: 80%;
+}
+
+.citiy-header{
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    margin-top: 3px ;
+}
+
+#map {
+    height: 400px; 
+    /*width: 400px;*/
+ }
+
+ #profile-image{
+    border-radius: 1%;
+ }
+ 
+ .align-middle {
+    vertical-align: middle;
+}
+
+.like-icon-span {
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.unlike-icon-span{
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.like-icon-span:hover {
+    color: rgb(19, 18, 18);
+    
+}
+
+.unlike-icon-span:hover {
+    color: rgb(65, 63, 63);
+}
+
+.like-count-span{
+    font-size: large;
+   
+}
+
+.aframebox {
+    height: 800px;
+    width: 900px;
+}
+
+.comment-icon > a{
+    text-decoration: none;
+    color: inherit;
+}
+.comment-icon:hover{
+    cursor: pointer;
+}
+
+.edit-icon:hover{
+    cursor: pointer;
+}
+
+.delete-icon:hover{
+    cursor: pointer;
+}
+
+/*#edit-form{
+    display: none;
+}*/
+
+.delete-button{
+
+  background-color: transparent;
+  border: none;
+ 
+}
+
+ul{
+  list-style-type: none;
+  list-style: none;
+}
+
+ul > li{
+  list-style-type: none;
+  list-style: none;
+}
+
+/*Boostrap*/
+/*#carouseIndicators{
+
+}*/
+
+/* for the image slider*/
+
+* {box-sizing:border-box}
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+/* Hide the images by default */
+.mySlides {
+  display: none;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
+
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active, .dot:hover {
+  background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
+#profile-image-div > img{
+  border-radius: 50%;
+}
+
+.main-user-photo{
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+}

@@ -140,7 +140,7 @@ def index(request):
     })
 
 
-
+"""
 def get_lat_long(request, location):
     google_url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {
@@ -158,7 +158,7 @@ def get_lat_long(request, location):
     else:
         return None
 
-
+"""
 def weather(request, city, country):
     api_key = settings.OPEN_WEATHER_API_KEY
     url = f'http://api.openweathermap.org/data/2.5/forecast?q={city},{country}&appid={api_key}'
@@ -200,6 +200,34 @@ def weather(request, city, country):
     return weather_data
 
 
+def get_lat_long(request, location):
+    google_url = "https://maps.googleapis.com/maps/api/geocode/json"
+    params = {
+        'address': location,
+        'key': settings.GOOGLE_API_KEY
+    }
+
+    try:
+        response = requests.get(google_url, params=params)
+        response.raise_for_status()  # Raises an exception for HTTP errors
+        data = response.json()
+        
+        # Log the response for debugging
+        print(f"Geocoding API response: {data}")
+        
+        if data.get('status') == 'OK' and data.get('results'):
+            lat = data['results'][0]['geometry']['location']['lat']
+            lng = data['results'][0]['geometry']['location']['lng']
+            return lat, lng
+        else:
+            # Log any issues with the API response
+            print(f"Geocoding failed: {data.get('status')}, {data.get('error_message', 'No details')}")
+    except Exception as e:
+        # Log any exceptions during the request
+        print(f"Error during geocoding: {e}")
+
+    return None
+
 
 @login_required
 def saveTrip(request):
@@ -209,33 +237,39 @@ def saveTrip(request):
     form = TripForm(request.POST)
 
     if form.is_valid():
-        trip = form.save(commit = False)
+        trip = form.save(commit=False)
         trip.owner = request.user
         trip.save()
-        
+
         coordinates = get_lat_long(request, trip.destination)
-        coords = {
-            "latitude" : coordinates[0],
-            "longitude" : coordinates[1],
-        }
-        print(f"coordinates: {coords}")
-        #Calling Google Place API with request as the first argument and trip destination as the second argument
-        places = googlePlace(request, trip.destination)
-        
-        #get the Name of the city and country into variable using split
-        # result_list = re.split(r',|-', your_string)
-        #city, country, *_ = map(str.strip, trip.destination.split(','))
-        city, country, *_ = map(str.strip, re.split(r',|-', trip.destination))
-        print(f"weather api key: {settings.OPEN_WEATHER_API_KEY}")
-        weather_data = weather(request, city, country)
-         
-        return render(request, "planner/save_a_trip.html", {
-            "trip": trip,
-            "places": places,
-            "weather": weather_data,
-            "coordinates": coords,
-            'google_api_key': settings.GOOGLE_API_KEY,
-        })
+        if coordinates:
+            coords = {
+                "latitude": coordinates[0],
+                "longitude": coordinates[1],
+            }
+            print(f"coordinates: {coords}")
+
+            # Calling Google Place API with request as the first argument and trip destination as the second argument
+            places = googlePlace(request, trip.destination)
+
+            # Extract the city and country for weather API
+            city, country, *_ = map(str.strip, re.split(r',|-', trip.destination))
+            print(f"weather api key: {settings.OPEN_WEATHER_API_KEY}")
+            weather_data = weather(request, city, country)
+
+            return render(request, "planner/save_a_trip.html", {
+                "trip": trip,
+                "places": places,
+                "weather": weather_data,
+                "coordinates": coords,
+                'google_api_key': settings.GOOGLE_API_KEY,
+            })
+        else:
+            print(f"Failed to get coordinates for {trip.destination}")
+            return render(request, "planner/error.html", {
+                "message": "Unable to retrieve location data. Please check your input and try again."
+            })
+
 
 @login_required(login_url='/login')
 def createPost(request):
