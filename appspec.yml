@@ -1,9 +1,9 @@
 version: 0.0
 os: linux
 files:
-  - source: /path/to/source/start_docker.sh
+  - source: scripts/start_docker.sh
     destination: /home/ec2-user/app/scripts/start_docker.sh
-  - source: /path/to/source/docker_compose_up.sh
+  - source: scripts/docker_compose_up.sh
     destination: /home/ec2-user/app/scripts/docker_compose_up.sh
 hooks:
   BeforeInstall:
