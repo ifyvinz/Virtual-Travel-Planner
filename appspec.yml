@@ -4,10 +4,10 @@ files:
   - source: /
     destination: /home/ec2-user/app
 hooks:
-  #BeforeInstall:
-    #- location: scripts/install_dependencies.sh
-      #timeout: 300
-      #runas: root
+  BeforeInstall:
+    - location: scripts/remove_existing_start_docker.sh
+      timeout: 300
+      runas: root
   #AfterInstall:
     #- location: scripts/start_docker.sh
       #timeout: 300
