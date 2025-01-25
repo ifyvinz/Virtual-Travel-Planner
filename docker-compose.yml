@@ -4,7 +4,8 @@ services:
   web:
     build:
       context: .
-    image: virtual-travel-planner-app:latest
+    #image: virtual-travel-planner-app:latest
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:latest
     container_name: django_app
     restart: always
     ports:
