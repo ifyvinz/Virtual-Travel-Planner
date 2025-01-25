@@ -2,14 +2,14 @@
 
 cd /home/ec2-user/app
 
-# Pull the latest code from the repository
-#echo "Pulling the latest code from the repository..."
-#git reset --hard  # Reset any local changes
-#git pull origin main  # Update to the latest code 
+# Login to AWS ECR 
+aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
 
 # Stop existing services
 echo "Stopping existing services..."
 docker-compose down
+docker rm -f $(docker ps -q -a)
+docker rmi -f $(docker images -q)
 
 # Pull the latest Docker image
 echo "Pulling the latest Docker image..."
